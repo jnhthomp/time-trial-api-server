@@ -7,11 +7,11 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Select a game:</h1>
+  <h1>Select a <%= type %> :</h1>
   <ul>
   <% for(let i = 0; i < info.length; i++){%> 
     <li>
-      <a href="/api/<%=info[i].name%>"><%= info[i].name %></a>
+      <a href="<%= path + info[i].name%>"><%= info[i].name %></a>
     </li>
   <%}%> 
   </ul>
