@@ -1,0 +1,4 @@
+# Get list of all db's available to select from (one for each game)
+GET http://localhost:8000/api
+
+#
