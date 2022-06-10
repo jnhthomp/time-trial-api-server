@@ -28,7 +28,7 @@ Mongo.connect(dbConnectionStr, { useUnifiedTopology: true })
  *  Add any methods you would like to run before each request here
  *  Then add to app.use
  */
-// Output all requests to server console for easier debugging
+// +Output all requests to server console for easier debugging
 const requestLogger = (req, res, nxt) => { 
   console.log('Method:', req.method)
   console.log('Path:', req.path)
@@ -46,19 +46,45 @@ app.use(express.json()) // Parses incoming json requests (such as in a head) and
 /**
  * *Routes
  *  '!' indicates level of importance
+ * 
  *! - /api => return list of all games, each containing their own tracks, who each have leaderboards
  *! - /api/:game GET => Return list of all tracks for that game (if it exists)
  *  - /api/:game POST => Create a new game db
  *!!- /api/:game/:trackName GET => Return data for that track such as trackname, image, and laptimes
  *!!- /api/:game/:trackName PUT => Add a time to a tracks leaderboard (Include object with driverInitials and time in req.body)
  */
-// Return list of all games (all databases available to client connection)
+// +Return list of all games (all databases available to client connection)
+app.get('/', (req, res) => { 
+  client.db().admin().listDatabases()
+    .then((dbs) => { 
+      console.log(dbs.databases);
+      let path = `/api/`
+      res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path })
+    })
+})
+
 app.get('/api', (req, res) => { 
   client.db().admin().listDatabases()
     .then((dbs) => { 
       console.log(dbs.databases)
-      res.render('game_select.ejs', { info: dbs.databases})
+      let path = `/api/`
+      res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path })
     })
+})
+
+// +Return a list of tracks for a given game
+app.get('/api/:gameName', (req, res) => { 
+  client.db(req.params.gameName).collections()
+    .then((tracks) => { 
+      tracks.map((t) => { 
+        console.log(t.collectionName)
+        return t.name = t.collectionName
+      })
+      
+      let path = `/api/${req.params.gameName}/`
+      res.render('path_select.ejs', { info: tracks, type: 'Track', path})
+      res.end()
+    });
 })
 
 app.listen(process.env.PORT, () => { 
