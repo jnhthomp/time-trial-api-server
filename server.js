@@ -60,14 +60,16 @@ app.get('/', async (req, res) => {
   try{
     // Fetch/store all databases available to this client 
     const dbs = await client.db().admin().listDatabases()
-
+    // Filter databases to exclude admin and local db's
+    let filteredDbs = dbs.databases.filter((db) =>db.name !== 'admin' && db.name !== 'local')
+    
     // Log found databases
-    console.log(`${dbs.databases.length} databse(s)/game(s) found`)
-    console.log(dbs.databases)
+    console.log(`${filteredDbs.length} databse(s)/game(s) found`)
+    console.log(filteredDbs)
 
     // Build path for ejs page to create links for users selecting games
     let path = '/api/'
-    res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
+    res.render('path_select.ejs', { info: filteredDbs, type: 'Game', path });
     res.end()
   } catch(e){
     console.log(e)
@@ -79,14 +81,16 @@ app.get('/api', async (req, res) => {
   try{
     // Fetch/store all databases available to this client 
     const dbs = await client.db().admin().listDatabases()
+    // Filter databases to exclude admin and local db's
+    let filteredDbs = dbs.databases.filter((db) => db.name !== 'admin' && db.name !== 'local')
 
     // Log found databases
-    console.log(`${dbs.databases.length} databse(s)/game(s) found`)
-    console.log(dbs.databases)
+    console.log(`${filteredDbs.length} databse(s)/game(s) found`)
+    console.log(filteredDbs)
 
     // Build path for ejs page to create links for users selecting games
     let path = '/api/'
-    res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
+    res.render('path_select.ejs', { info: filteredDbs, type: 'Game', path });
     res.end()
   } catch(e){
     console.log(e)
