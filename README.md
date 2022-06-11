@@ -29,9 +29,46 @@ This is an Express based application server that connects with a MongoDB instanc
       ```
 
 ## Optimizations
-Finish adding routes and include endpoint tests for all
-Add Username/password validation
+- Add Username/password validation
 
+- Consider allowing a flag to keep time as numbers and don't convert to string when returning
+
+- Add flag to remove slower duplicate driver times when displaying leaderboard but still storing all times
+    Consider the following leadboard array:
+    ```js
+    [ {driverInitial: 'TMP', time: 90.000}, 
+      {driverInitial: 'TRZ', time: 91.000},
+      {driverInitial: 'TMP', time: 92.000}]
+    ```
+    When querying a user may only be interested in the fastest time by each driver 
+    Therefore, we will need to filter the results before returning
+    Sometimes they may want all times though
+    Allow a flag that allows for both but only returns one or the other by default
+
+- Write JSON returns for proper API and quick integration to discord bot
+
+- Validate user entered data server side before accepting submission
+
+- Routes still needed
+  - Create new game/track
+    Will be done by submitting lapdata obj to a non-existent/new database/table combo
+
+- Set root route as homepage form where you can select a game from dropdown, a track from dropdown, and submit timing data
+
+- Create general function to check if submitted time is in seconds or string form. This will allow either format to be used when submitting a time without breaking anything
+  - Check for existence of ':'
+  - If it exists is a string and must be converted before being submitted to database
+  - If it does not exist then does not need converted before submission
+
+- Add forms to all page allowing a new type of leaderboard post from that page
+  - If game select page then form will need to know: game=> track=> time data
+  - If track select page then form will need to know: track=> time data
+  - If on a track already then only time data is needed
+
+- Fix bug in Tools `convertSecToTimeString()`
+  - If given seconds after removing minutes value if there are less than 10 seconds remaing the format is incorrect
+  - Currently looks like this: `convertSecToTimeString(66) => 1:6.000`
+  - Should look like this: `convertSecToTimeString(66) => 1:06.000`
 ## Lessons Learned
 - Creating Node server applications
 - Interacting with MongoDB via CRUD actions
