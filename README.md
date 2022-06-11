@@ -12,8 +12,31 @@ This is an Express based application server that connects with a MongoDB instanc
 
 ### Available Endpoints
 - `/api`
-  - GET: Return a list of available games to choose from. Each game is a database and will contain tracks as collections within
-
+  - `GET`: Return a list of available games to choose from. Each game is a database and will contain tracks as collections within
+- `/api/:gameName`
+  - `GET`: Return a list of available tracks for a chosen game. Each track is a collection of documents (one for each time submitted)
+- `/api/:gameName/:trackName`
+  - `GET`: Return a list of all documents for this game/track (db/collection). Each document is a time that has been submitted for this track
+  - `POST`: Submit a new time to the given database/collection using the following json format
+    ```json
+    {
+      "driverInitial": "TST",
+      "time": "59:59.999"
+    }
+    ```
+- `/api/newGame`
+  - `GET`: Return a form that will submit to this routes post method to create a new game + track + time. Helpful for submitting times to games and tracks that do not exist
+  - `POST`: Submit a json object of the following format to create a new database AND collection AND document entry. Only use when the game does not exist yet
+    ```json
+    {
+      "game": "test_game",
+      "track": "test_track",
+      "driverInitial": "TST",
+      "car": "equal",
+      "time": "1:22.858"
+    }
+    ```
+    
 ### How to install/use
 1. Create MongoDB account/database
     - Use connect button to get connection string and make note
