@@ -1,7 +1,6 @@
 /**
  * *Imports
  */
-const { response } = require('express');
 const express = require('express');
 const app = express();
 const Mongo = require('mongodb').MongoClient;
@@ -59,77 +58,97 @@ app.use(requestLogger) // Log request data to console //!Must be after urlencode
  */
 // +Return list of all games (all databases available to client connection)
 app.get('/', async (req, res) => {
-  // Fetch/store all databases available to this client 
-  const dbs = await client.db().admin().listDatabases()
+  try{
+    // Fetch/store all databases available to this client 
+    const dbs = await client.db().admin().listDatabases()
 
-  // Log found databases
-  console.log(`${dbs.databases.length} databse(s)/game(s) found`)
-  console.log(dbs.databases)
+    // Log found databases
+    console.log(`${dbs.databases.length} databse(s)/game(s) found`)
+    console.log(dbs.databases)
 
-  // Build path for ejs page to create links for users selecting games
-  let path = '/api/'
-  res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
-  res.end()
+    // Build path for ejs page to create links for users selecting games
+    let path = '/api/'
+    res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
+    res.end()
+  } catch(e){
+    console.log(e)
+  }
 })
 
 // Duplicate route for root and api root will help keep main app and api side to be seperate in the future as this will be phased to only return json
 app.get('/api', async (req, res) => {
-  // Fetch/store all databases available to this client 
-  const dbs = await client.db().admin().listDatabases()
+  try{
+    // Fetch/store all databases available to this client 
+    const dbs = await client.db().admin().listDatabases()
 
-  // Log found databases
-  console.log(`${dbs.databases.length} databse(s)/game(s) found`)
-  console.log(dbs.databases)
+    // Log found databases
+    console.log(`${dbs.databases.length} databse(s)/game(s) found`)
+    console.log(dbs.databases)
 
-  // Build path for ejs page to create links for users selecting games
-  let path = '/api/'
-  res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
-  res.end()
+    // Build path for ejs page to create links for users selecting games
+    let path = '/api/'
+    res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
+    res.end()
+  } catch(e){
+    console.log(e)
+  }
 })
 
 // +Return a list of tracks for a given game
 app.get('/api/:gameName', async (req, res) => {
-  const tracks = await client.db(req.params.gameName).collections()
+  try{
+    const tracks = await client.db(req.params.gameName).collections()
 
-  let renamedTracks = tracks.map((t) => {
-    // Map through array of tracks
-    console.log(t.collectionName)
-    // Add a name property to display for ejs template (renaming keeps ejs template consistent)
-    return {...t, name: t.collectionName}
-  })
+    let renamedTracks = tracks.map((t) => {
+      // Map through array of tracks
+      console.log(t.collectionName)
+      // Add a name property to display for ejs template (renaming keeps ejs template consistent)
+      return {...t, name: t.collectionName}
+    })
 
-  // Path variable to be displayed in ejs
-  // Helps build path to view data on the given game
-  let path = `/api/${req.params.gameName}/`
+    // Path variable to be displayed in ejs
+    // Helps build path to view data on the given game
+    let path = `/api/${req.params.gameName}/`
 
-  res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
-  res.end()
+    res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
+    res.end()
+  } catch(e){
+    console.log(e)
+  }
 });
 
 
 // +Return a list of times for a given game+track
 app.get('/api/:gameName/:trackName', async (req, res) => { 
-  // Return for all times for a given game+track and sort descending by time (fastest first)
-  const data = await client.db(req.params.gameName).collection(req.params.trackName).find().sort({time: 1}).limit(Number.MAX_SAFE_INTEGER).toArray()
-  // Convert seconds from number to string for viewing
-  data.map((el) => { el.time = convertSecToTimeString(el.time) }) // 83.456 => '1:23.456'
+  try{
+    // Return for all times for a given game+track and sort descending by time (fastest first)
+    const data = await client.db(req.params.gameName).collection(req.params.trackName).find().sort({time: 1}).limit(Number.MAX_SAFE_INTEGER).toArray()
+    // Convert seconds from number to string for viewing
+    data.map((el) => { el.time = convertSecToTimeString(el.time) }) // 83.456 => '1:23.456'
 
-  // Log/render found data from search
-  console.log(`${data.length} leaderboard records found for ${req.params.gameName} at ${req.params.trackName}`)
-  console.log(data)
-  res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
+    // Log/render found data from search
+    console.log(`${data.length} leaderboard records found for ${req.params.gameName} at ${req.params.trackName}`)
+    console.log(data)
+    res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
+  } catch(e){
+    console.log(e)
+  }
 })
 
 // +Add a new time to the leaderboard for a given track/
 app.post('/api/:gameName/:trackName', async (req, res) => { 
-  // Convert time from '1:23.456' string format to seconds as a number format // =>(83.456)
-  const seconds = convertTimeStringToNum(req.body.time) // '1:23.456' => 83.456
-  // Add 
-  const result = await client.db(req.params.gameName).collection(req.params.trackName).insertOne({driverInitial: req.body.driverInitial, time: seconds})
+  try{
+    // Convert time from '1:23.456' string format to seconds as a number format // =>(83.456)
+    const seconds = convertTimeStringToNum(req.body.time) // '1:23.456' => 83.456
+    // Add 
+    const result = await client.db(req.params.gameName).collection(req.params.trackName).insertOne({driverInitial: req.body.driverInitial, time: seconds})
 
-  console.log(`New time submitted to ${req.params.gameName} - ${req.params.trackName} leaderboard with id:${result.insertedId}}`)
-  // Redirect to view track leaderboard after submission
-  res.redirect(req.path)
+    console.log(`New time submitted to ${req.params.gameName} - ${req.params.trackName} leaderboard with id:${result.insertedId}}`)
+    // Redirect to view track leaderboard after submission
+    res.redirect(req.path)
+  } catch(e){
+    console.log(e)
+  }
 })
 
 /**
