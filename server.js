@@ -50,10 +50,9 @@ app.use(requestLogger) // Log request data to console //!Must be after urlencode
  *  '?' for notes about the above route
  **  - /api => return list of all games, each containing their own tracks, who each have leaderboards
  **  - /api/:game GET => Return list of all tracks for that game (if it exists)
- *! - /api/:game POST => Create a new game db
- *      ?Will likely need a track/time object in order to create
- *!!- /api/:game/:trackName GET => Return data for that track such as trackname, image, and laptimes
- *      ?Starting with just laptimes... Consider creating entry with id: 'about' or something to access a document containing track data
+ ** - /api/:game POST => Create a new game db (needs a track/time object in order to create)
+ ** - /api/:game/:trackName GET => Return data for that track such as trackname, image, and laptimes
+ *      ?Consider creating entry with id: 'about' or something to access a document containing track data
  **  - /api/:game/:trackName POST => Add a time to a tracks leaderboard (Include object with driverInitials and time in req.body)
  */
 // +Return list of all games (all databases available to client connection)
@@ -90,6 +89,55 @@ app.get('/api', async (req, res) => {
     res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
     res.end()
   } catch(e){
+    console.log(e)
+  }
+})
+
+// +Return a form the user can use to submit a new game + track + time entry
+app.get('/api/newGame', async (req, res) => { 
+  try {
+    // Render new game form
+    res.render('new_game.ejs', {});
+    res.end();
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+// +Add a new game + track + time entry to the database
+app.post('/api/newGame', async (req, res) => { 
+  try {
+    // Grab time from form and check if it is a string or not
+    let time;
+    if(req.body.time.indexOf(':') > -1){
+      // If is a string keep it as such
+      time = req.body.time
+    } else{
+      // If it does not have ':' then assume time is in seconds and convert to num
+      time = Number(req.body.time)
+    }
+    // Collect sent data and save to object
+    // Allows setting default values and ensure proper headings/value from sender
+    const gameDataJSON = {
+      game: req.body.game.toLowerCase() || 'test_game',
+      track: req.body.track.toLowerCase() || 'test_track',
+      leaderboardData: {
+        driverInitial: req.body.driverInitial.toUpperCase() || 'TST',
+        car: req.body.car || 'default',
+        time: typeof time === 'string' ?
+                convertTimeStringToNum(time) :
+                (time || 999.999)
+      }
+    }
+
+    // Submit data to db
+    const result = await client.db(gameDataJSON.game).collection(gameDataJSON.track).insertOne(gameDataJSON.leaderboardData);
+
+    console.log(`New game created: ${gameDataJSON.game}`)
+    // Redirect to home
+    // TODO: Redirect to newly created game
+    res.redirect('/')
+  } catch (e) {
     console.log(e)
   }
 })
