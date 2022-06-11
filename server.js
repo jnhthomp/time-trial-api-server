@@ -1,6 +1,7 @@
 /**
  * *Imports
  */
+const { response } = require('express');
 const express = require('express');
 const app = express();
 const Mongo = require('mongodb').MongoClient;
@@ -57,43 +58,54 @@ app.use(requestLogger) // Log request data to console //!Must be after urlencode
  **  - /api/:game/:trackName POST => Add a time to a tracks leaderboard (Include object with driverInitials and time in req.body)
  */
 // +Return list of all games (all databases available to client connection)
-app.get('/', (req, res) => { 
-  client.db().admin().listDatabases()
-    .then((dbs) => { 
-      console.log(dbs.databases);
-      let path = `/api/`
-      res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path })
-    })
+app.get('/', async (req, res) => {
+  // Fetch/store all databases available to this client 
+  const dbs = await client.db().admin().listDatabases()
+
+  // Log found databases
+  console.log(`${dbs.databases.length} databse(s)/game(s) found`)
+  console.log(dbs.databases)
+
+  // Build path for ejs page to create links for users selecting games
+  let path = '/api/'
+  res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
+  res.end()
 })
 
 // Duplicate route for root and api root will help keep main app and api side to be seperate in the future as this will be phased to only return json
-app.get('/api', (req, res) => { 
-  client.db().admin().listDatabases()
-    .then((dbs) => { 
-      console.log(dbs.databases)
-      let path = `/api/`
-      res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path })
-    })
+app.get('/api', async (req, res) => {
+  // Fetch/store all databases available to this client 
+  const dbs = await client.db().admin().listDatabases()
+
+  // Log found databases
+  console.log(`${dbs.databases.length} databse(s)/game(s) found`)
+  console.log(dbs.databases)
+
+  // Build path for ejs page to create links for users selecting games
+  let path = '/api/'
+  res.render('path_select.ejs', { info: dbs.databases, type: 'Game', path });
+  res.end()
 })
 
 // +Return a list of tracks for a given game
-app.get('/api/:gameName', (req, res) => { 
-  client.db(req.params.gameName).collections()
-    .then((tracks) => { 
-      // Map through array of tracks
-      tracks.map((t) => { 
-        console.log(t.collectionName)
-        // Add a name property to display for ejs template (renaming keeps ejs template consistent)
-        return t.name = t.collectionName
-      })
-      // Path variable to be displayed in ejs
-      // Helps build path to view data on the given game
-      let path = `/api/${req.params.gameName}/`
-      
-      res.render('path_select.ejs', { info: tracks, type: 'Track', path})
-      res.end()
-    });
-})
+app.get('/api/:gameName', async (req, res) => {
+  const tracks = await client.db(req.params.gameName).collections()
+
+  let renamedTracks = tracks.map((t) => {
+    // Map through array of tracks
+    console.log(t.collectionName)
+    // Add a name property to display for ejs template (renaming keeps ejs template consistent)
+    return {...t, name: t.collectionName}
+  })
+
+  // Path variable to be displayed in ejs
+  // Helps build path to view data on the given game
+  let path = `/api/${req.params.gameName}/`
+
+  res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
+  res.end()
+});
+
 
 // +Return a list of times for a given game+track
 app.get('/api/:gameName/:trackName', async (req, res) => { 
@@ -116,6 +128,8 @@ app.post('/api/:gameName/:trackName', async (req, res) => {
   const result = await client.db(req.params.gameName).collection(req.params.trackName).insertOne({driverInitial: req.body.driverInitial, time: seconds})
 
   console.log(`New time submitted to ${req.params.gameName} - ${req.params.trackName} leaderboard with id:${result.insertedId}}`)
+  // Redirect to view track leaderboard after submission
+  res.redirect(req.path)
 })
 
 /**
