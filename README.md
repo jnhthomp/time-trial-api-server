@@ -36,7 +36,7 @@ This is an Express based application server that connects with a MongoDB instanc
       "time": "1:22.858"
     }
     ```
-    
+
 ### How to install/use
 1. Create MongoDB account/database
     - Use connect button to get connection string and make note
@@ -52,6 +52,8 @@ This is an Express based application server that connects with a MongoDB instanc
       ```
 
 ## Optimizations
+- Extract submit data to a reusable method
+
 - Add Username/password validation
 
 - Consider allowing a flag to keep time as numbers and don't convert to string when returning
@@ -92,6 +94,15 @@ This is an Express based application server that connects with a MongoDB instanc
   - If given seconds after removing minutes value if there are less than 10 seconds remaing the format is incorrect
   - Currently looks like this: `convertSecToTimeString(66) => 1:6.000`
   - Should look like this: `convertSecToTimeString(66) => 1:06.000`
+
+- Add validation to game/track names to replaces spaces with '_'
+
+- Add form each items to a new line for better mobile formatting
+
+- Create seperate routes for API (data only) and ejs routes
+  - Update links in discord bot to match these non routes (embed object should link to ejs route but data should come from api route)
+  - Make sure links in ejs file link to ejs route and not api route
+
 ## Lessons Learned
 - Creating Node server applications
 - Interacting with MongoDB via CRUD actions
