@@ -68,7 +68,7 @@ app.get('/', async (req, res) => {
     console.log(filteredDbs)
 
     // Build path for ejs page to create links for users selecting games
-    let path = '/api/'
+    let path = '/'
     res.render('path_select.ejs', { info: filteredDbs, type: 'Game', path });
     res.end()
   } catch(e){
@@ -160,15 +160,42 @@ app.get('/api/:gameName', async (req, res) => {
 
     // Path variable to be displayed in ejs
     // Helps build path to view data on the given game
-    let path = `/api/${req.params.gameName}/`
+    let path = `/${req.params.gameName}/`
 
-    res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
+    
+    renamedTracks = renamedTracks.map((track) => ({name: track.name}))
+    console.log(renamedTracks)
+    // res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
+    res.json(renamedTracks)
+
     res.end()
   } catch(e){
     console.log(e)
   }
 });
 
+// +Return a list of tracks for a given game
+app.get('/:gameName', async (req, res) => {
+  try {
+    const tracks = await client.db(req.params.gameName).collections()
+
+    let renamedTracks = tracks.map((t) => {
+      // Map through array of tracks
+      console.log(t.collectionName)
+      // Add a name property to display for ejs template (renaming keeps ejs template consistent)
+      return { ...t, name: t.collectionName }
+    })
+
+    // Path variable to be displayed in ejs
+    // Helps build path to view data on the given game
+    let path = `/${req.params.gameName}/`
+
+    res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
+    res.end()
+  } catch (e) {
+    console.log(e)
+  }
+});
 
 // +Return a list of times for a given game+track
 app.get('/api/:gameName/:trackName', async (req, res) => { 
@@ -181,11 +208,35 @@ app.get('/api/:gameName/:trackName', async (req, res) => {
     // Log/render found data from search
     console.log(`${data.length} leaderboard records found for ${req.params.gameName} at ${req.params.trackName}`)
     console.log(data)
-    res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
+    res.json({
+      game: req.params.gameName,
+      track: req.params.trackName,
+      leaderboard: data
+    })
+    //res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
   } catch(e){
     console.log(e)
   }
 })
+
+// +Return a list of times for a given game+track
+app.get('/:gameName/:trackName', async (req, res) => {
+  try {
+    // Return for all times for a given game+track and sort descending by time (fastest first)
+    const data = await client.db(req.params.gameName).collection(req.params.trackName).find().sort({ time: 1 }).limit(Number.MAX_SAFE_INTEGER).toArray()
+    // Convert seconds from number to string for viewing
+    data.map((el) => { el.time = convertSecToTimeString(el.time) }) // 83.456 => '1:23.456'
+
+    // Log/render found data from search
+    console.log(`${data.length} leaderboard records found for ${req.params.gameName} at ${req.params.trackName}`)
+    console.log(data)
+    res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+
 
 // +Add a new time to the leaderboard for a given track/
 app.post('/api/:gameName/:trackName', async (req, res) => { 
