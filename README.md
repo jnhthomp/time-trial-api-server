@@ -70,34 +70,14 @@ This is an Express based application server that connects with a MongoDB instanc
     Sometimes they may want all times though
     Allow a flag that allows for both but only returns one or the other by default
 
-- Write JSON returns for proper API and quick integration to discord bot
-
 - Validate user entered data server side before accepting submission
 
-- Routes still needed
-  - Create new game/track
-    Will be done by submitting lapdata obj to a non-existent/new database/table combo
-
-- Set root route as homepage form where you can select a game from dropdown, a track from dropdown, and submit timing data
+- Add form to root route where you can select a game from dropdown, a track from dropdown, and submit timing data
 
 - Create general function to check if submitted time is in seconds or string form. This will allow either format to be used when submitting a time without breaking anything
   - Check for existence of ':'
   - If it exists is a string and must be converted before being submitted to database
   - If it does not exist then does not need converted before submission
-
-- Add forms to all page allowing a new type of leaderboard post from that page
-  - If game select page then form will need to know: game=> track=> time data
-  - If track select page then form will need to know: track=> time data
-  - If on a track already then only time data is needed
-
-- Fix bug in Tools `convertSecToTimeString()`
-  - If given seconds after removing minutes value if there are less than 10 seconds remaing the format is incorrect
-  - Currently looks like this: `convertSecToTimeString(66) => 1:6.000`
-  - Should look like this: `convertSecToTimeString(66) => 1:06.000`
-
-- Add validation to game/track names to replaces spaces with '_'
-
-- Add form each items to a new line for better mobile formatting
 
 - Create seperate routes for API (data only) and ejs routes
   - Update links in discord bot to match these non routes (embed object should link to ejs route but data should come from api route)
