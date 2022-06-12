@@ -12,8 +12,11 @@
   <h1> <%= track %> Leaderboard</h1>
   <form action="/api/<%= game %>/<%= track %>" method="POST">
     <label for="time">Time:</label><input type="text" placeholder="1:23.456" name="time"/>
+    <br>
     <label for="driverInitial">Driver Initial:</label><input type="text" placeholder="AAA" name="driverInitial" />
+    <br>
     <label for"car">Car:</label><input type="text" value="equal performance" name="car"/>
+    <br>
     <input type="submit">
   </form>
   <ul>
