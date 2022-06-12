@@ -90,7 +90,7 @@ app.get('/api', async (req, res) => {
 
     // Build path for ejs page to create links for users selecting games
     let path = '/api/'
-    res.render('path_select.ejs', { info: filteredDbs, type: 'Game', path });
+    res.json(filteredDbs)
     res.end()
   } catch(e){
     console.log(e)
@@ -98,7 +98,7 @@ app.get('/api', async (req, res) => {
 })
 
 // +Return a form the user can use to submit a new game + track + time entry
-app.get('/api/newGame', async (req, res) => { 
+app.get('/newGame', async (req, res) => { 
   try {
     // Render new game form
     res.render('new_game.ejs', {});
@@ -138,9 +138,8 @@ app.post('/api/newGame', async (req, res) => {
     const result = await client.db(gameDataJSON.game).collection(gameDataJSON.track).insertOne(gameDataJSON.leaderboardData);
 
     console.log(`New game created: ${gameDataJSON.game}`)
-    // Redirect to home
-    // TODO: Redirect to newly created game
-    res.redirect('/')
+    // Redirect to newly created game
+    res.redirect(`/${gameDataJSON.game}`)
   } catch (e) {
     console.log(e)
   }
