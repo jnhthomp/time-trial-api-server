@@ -122,9 +122,22 @@ app.post('/api/newGame', async (req, res) => {
     }
     // Collect sent data and save to object
     // Allows setting default values and ensure proper headings/value from sender
+
+    // Remove spaces from game name before accepting
+    let formattedGameName = req.body.game.toLowerCase().trim() || ''
+    while(formattedGameName.indexOf(' ') > -1){
+      formattedGameName = formattedGameName.replace(' ', '_')
+    }
+
+    // Remove spaces from track name before accpeting
+    let formattedTrackName = req.body.track.toLowerCase().trim() || ''
+    while(formattedTrackName.indexOf(' ') > -1){
+      formattedTrackName = formattedTrackName.replace(' ', '_')
+    }
+
     const gameDataJSON = {
-      game: req.body.game.toLowerCase() || 'test_game',
-      track: req.body.track.toLowerCase() || 'test_track',
+      game: formattedGameName || 'test_game',
+      track: formattedTrackName || 'test_track',
       leaderboardData: {
         driverInitial: req.body.driverInitial.toUpperCase() || 'TST',
         car: req.body.car || 'default',
