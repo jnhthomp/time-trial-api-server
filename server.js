@@ -260,7 +260,8 @@ app.post('/api/:gameName/:trackName', async (req, res) => {
 // useful for returning data in an expected format or convert for ejs display sake
 // convertSecToTimeString(95.123) => '1:35.123'
 function convertSecToTimeString(secAsNum){
-  const seconds = (secAsNum % 60).toFixed(3);
+  let seconds = (secAsNum % 60).toFixed(3);
+  seconds = seconds.indexOf('.') === 1 ? '0' + seconds : seconds
   const minutes = Math.floor(secAsNum / 60);
   const timeStr = `${minutes}:${seconds}`
   return timeStr
