@@ -193,7 +193,7 @@ app.post('/api/:gameName/:trackName', async (req, res) => {
     // Convert time from '1:23.456' string format to seconds as a number format // =>(83.456)
     const seconds = convertTimeStringToNum(req.body.time) // '1:23.456' => 83.456
     // Add 
-    const result = await client.db(req.params.gameName).collection(req.params.trackName).insertOne({driverInitial: req.body.driverInitial, time: seconds})
+    const result = await client.db(req.params.gameName).collection(req.params.trackName).insertOne({driverInitial: req.body.driverInitial, time: seconds, car: req.body.car})
 
     console.log(`New time submitted to ${req.params.gameName} - ${req.params.trackName} leaderboard with id:${result.insertedId}}`)
     // Redirect to view track leaderboard after submission
