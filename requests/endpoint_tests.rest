@@ -14,12 +14,20 @@ GET {{baseUrl}}
 GET {{baseUrl}}/api
 ###
 
-### Get list of all tracks available within a game
+### Get list of all tracks available within a game (json response)
 GET {{baseUrl}}/api/{{testDB}}
 ###
 
-### Get list of all times for a given game + track
+### Get list of all tracks available (ejs response)
+GET {{baseUrl}}/{{testDB}}
+###
+
+### Get list of all times for a given game + track (json response)
 GET {{baseUrl}}/api/{{testDB}}/{{testTrack}}
+###
+
+### Get list of all times for a given game + track (ejs response)
+GET {{baseUrl}}/{{testDB}}/{{testTrack}}
 ###
 
 ### Post new time to a given game + track
@@ -33,7 +41,7 @@ Content-Type: application/json
 }
 
 ### Get create new game form
-GET {{baseUrl}}/api/newGame
+GET {{baseUrl}}/newGame
 ###
 
 ### Create a new game with track/ ime listing
