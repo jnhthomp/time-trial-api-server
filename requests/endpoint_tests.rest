@@ -28,7 +28,8 @@ Content-Type: application/json
 
 {
   "driverInitial": "TST",
-  "time": "59:59.999"
+  "time": "59:59.999",
+  "car": "equal performance"
 }
 
 ### Get create new game form
