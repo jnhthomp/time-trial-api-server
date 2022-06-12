@@ -248,7 +248,7 @@ app.post('/api/:gameName/:trackName', async (req, res) => {
 
     console.log(`New time submitted to ${req.params.gameName} - ${req.params.trackName} leaderboard with id:${result.insertedId}}`)
     // Redirect to view track leaderboard after submission
-    res.redirect(req.path)
+    res.redirect(`/${req.params.gameName}/${req.params.trackName}`)
   } catch(e){
     console.log(e)
   }
