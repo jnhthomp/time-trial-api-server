@@ -253,10 +253,25 @@ app.get('/:gameName/:trackName', async (req, res) => {
 // +Add a new time to the leaderboard for a given track/
 app.post('/api/:gameName/:trackName', async (req, res) => { 
   try{
-    // Convert time from '1:23.456' string format to seconds as a number format // =>(83.456)
-    const seconds = convertTimeStringToNum(req.body.time) // '1:23.456' => 83.456
-    // Add 
-    const result = await client.db(req.params.gameName).collection(req.params.trackName).insertOne({driverInitial: req.body.driverInitial, time: seconds, car: req.body.car})
+    // Grab time from form and check if it is a string or not
+    let time;
+    if (req.body.time.indexOf(':') > -1) {
+      // If is a string keep it as such
+      time = req.body.time
+    } else {
+      // If it does not have ':' then assume time is in seconds and convert to num
+      time = Number(req.body.time)
+    }
+
+    // Create body and select the appropriate conversion for time
+    const result = await client.db(req.params.gameName).collection(req.params.trackName)
+                            .insertOne({
+                              driverInitial: 
+                              req.body.driverInitial, 
+                              time: typeof time === 'string' ?
+                                convertTimeStringToNum(time) :
+                                (time || 999.999),
+                              car: req.body.car})
 
     console.log(`New time submitted to ${req.params.gameName} - ${req.params.trackName} leaderboard with id:${result.insertedId}}`)
     // Redirect to view track leaderboard after submission
