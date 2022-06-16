@@ -71,6 +71,11 @@ This is an Express based application server that connects with a MongoDB instanc
     Allow a flag that allows for both but only returns one or the other by default
 
 - Validate user entered data server side before accepting submission
+  - Force lowercase db and track names
+  - Force uppercase initials
+
+- Add timestamp field when adding a new time so we can know when a record was set
+  - Could allow some cool visualizations on the back and forth between records
 
 - Add form to root route where you can select a game from dropdown, a track from dropdown, and submit timing data
 
