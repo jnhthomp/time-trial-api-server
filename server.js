@@ -40,7 +40,7 @@ const requestLogger = (req, res, nxt) => {
 }
 
 app.set('view engine', 'ejs');
-app.use('cors')
+app.use(cors())
 app.use(express.static('client/build')) // Files in public folder don't need routes created
 app.use(express.urlencoded({ extended: true })) // https://stackoverflow.com/a/51844327/9059589 - Allows incoming data to be strings, arrays, or objects with nested objects
 app.use(express.json()) // Parses incoming json requests (such as in a head) and adds them to req.body to be accessed
