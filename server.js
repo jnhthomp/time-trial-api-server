@@ -55,26 +55,26 @@ app.use(requestLogger) // Log request data to console //!Must be after urlencode
  *      ?Consider creating entry with id: 'about' or something to access a document containing track data
  **  - /api/:game/:trackName POST => Add a time to a tracks leaderboard (Include object with driverInitials and time in req.body)
  */
-// +Return list of all games (all databases available to client connection)
-app.get('/', async (req, res) => {
-  try{
-    // Fetch/store all databases available to this client 
-    const dbs = await client.db().admin().listDatabases()
-    // Filter databases to exclude admin and local db's
-    let filteredDbs = dbs.databases.filter((db) =>db.name !== 'admin' && db.name !== 'local')
+// // +Return list of all games (all databases available to client connection)
+// app.get('/', async (req, res) => {
+//   try{
+//     // Fetch/store all databases available to this client 
+//     const dbs = await client.db().admin().listDatabases()
+//     // Filter databases to exclude admin and local db's
+//     let filteredDbs = dbs.databases.filter((db) =>db.name !== 'admin' && db.name !== 'local')
     
-    // Log found databases
-    console.log(`${filteredDbs.length} databse(s)/game(s) found`)
-    console.log(filteredDbs)
+//     // Log found databases
+//     console.log(`${filteredDbs.length} databse(s)/game(s) found`)
+//     console.log(filteredDbs)
 
-    // Build path for ejs page to create links for users selecting games
-    let path = '/'
-    res.render('path_select.ejs', { info: filteredDbs, type: 'Game', path });
-    res.end()
-  } catch(e){
-    console.log(e)
-  }
-})
+//     // Build path for ejs page to create links for users selecting games
+//     let path = '/'
+//     res.render('path_select.ejs', { info: filteredDbs, type: 'Game', path });
+//     res.end()
+//   } catch(e){
+//     console.log(e)
+//   }
+// })
 
 // Duplicate route for root and api root will help keep main app and api side to be seperate in the future as this will be phased to only return json
 app.get('/api', async (req, res) => {
@@ -97,16 +97,16 @@ app.get('/api', async (req, res) => {
   }
 })
 
-// +Return a form the user can use to submit a new game + track + time entry
-app.get('/newGame', async (req, res) => { 
-  try {
-    // Render new game form
-    res.render('new_game.ejs', {});
-    res.end();
-  } catch (e) {
-    console.log(e)
-  }
-})
+// // +Return a form the user can use to submit a new game + track + time entry
+// app.get('/newGame', async (req, res) => { 
+//   try {
+//     // Render new game form
+//     res.render('new_game.ejs', {});
+//     res.end();
+//   } catch (e) {
+//     console.log(e)
+//   }
+// })
 
 // +Add a new game + track + time entry to the database
 app.post('/api/newGame', async (req, res) => { 
@@ -186,28 +186,28 @@ app.get('/api/:gameName', async (req, res) => {
   }
 });
 
-// +Return a list of tracks for a given game
-app.get('/:gameName', async (req, res) => {
-  try {
-    const tracks = await client.db(req.params.gameName).collections()
+// // +Return a list of tracks for a given game
+// app.get('/:gameName', async (req, res) => {
+//   try {
+//     const tracks = await client.db(req.params.gameName).collections()
 
-    let renamedTracks = tracks.map((t) => {
-      // Map through array of tracks
-      console.log(t.collectionName)
-      // Add a name property to display for ejs template (renaming keeps ejs template consistent)
-      return { ...t, name: t.collectionName }
-    })
+//     let renamedTracks = tracks.map((t) => {
+//       // Map through array of tracks
+//       console.log(t.collectionName)
+//       // Add a name property to display for ejs template (renaming keeps ejs template consistent)
+//       return { ...t, name: t.collectionName }
+//     })
 
-    // Path variable to be displayed in ejs
-    // Helps build path to view data on the given game
-    let path = `/${req.params.gameName}/`
+//     // Path variable to be displayed in ejs
+//     // Helps build path to view data on the given game
+//     let path = `/${req.params.gameName}/`
 
-    res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
-    res.end()
-  } catch (e) {
-    console.log(e)
-  }
-});
+//     res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
+//     res.end()
+//   } catch (e) {
+//     console.log(e)
+//   }
+// });
 
 // +Return a list of times for a given game+track
 app.get('/api/:gameName/:trackName', async (req, res) => { 
@@ -231,22 +231,22 @@ app.get('/api/:gameName/:trackName', async (req, res) => {
   }
 })
 
-// +Return a list of times for a given game+track
-app.get('/:gameName/:trackName', async (req, res) => {
-  try {
-    // Return for all times for a given game+track and sort descending by time (fastest first)
-    const data = await client.db(req.params.gameName).collection(req.params.trackName).find().sort({ time: 1 }).limit(Number.MAX_SAFE_INTEGER).toArray()
-    // Convert seconds from number to string for viewing
-    data.map((el) => { el.time = convertSecToTimeString(el.time) }) // 83.456 => '1:23.456'
+// // +Return a list of times for a given game+track
+// app.get('/:gameName/:trackName', async (req, res) => {
+//   try {
+//     // Return for all times for a given game+track and sort descending by time (fastest first)
+//     const data = await client.db(req.params.gameName).collection(req.params.trackName).find().sort({ time: 1 }).limit(Number.MAX_SAFE_INTEGER).toArray()
+//     // Convert seconds from number to string for viewing
+//     data.map((el) => { el.time = convertSecToTimeString(el.time) }) // 83.456 => '1:23.456'
 
-    // Log/render found data from search
-    console.log(`${data.length} leaderboard records found for ${req.params.gameName} at ${req.params.trackName}`)
-    console.log(data)
-    res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
-  } catch (e) {
-    console.log(e)
-  }
-})
+//     // Log/render found data from search
+//     console.log(`${data.length} leaderboard records found for ${req.params.gameName} at ${req.params.trackName}`)
+//     console.log(data)
+//     res.render('track_leaderboard.ejs', {info: data, game: req.params.gameName, track: req.params.trackName})
+//   } catch (e) {
+//     console.log(e)
+//   }
+// })
 
 
 
