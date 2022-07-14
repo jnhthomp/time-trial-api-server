@@ -3,6 +3,7 @@
  */
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const Mongo = require('mongodb').MongoClient;
 require('dotenv').config();
 const PORT = process.env.PORT || 5000 // Get port from .env or set manually to 5000
@@ -39,6 +40,7 @@ const requestLogger = (req, res, nxt) => {
 }
 
 app.set('view engine', 'ejs');
+app.use('cors')
 app.use(express.static('public')) // Files in public folder don't need routes created
 app.use(express.urlencoded({ extended: true })) // https://stackoverflow.com/a/51844327/9059589 - Allows incoming data to be strings, arrays, or objects with nested objects
 app.use(express.json()) // Parses incoming json requests (such as in a head) and adds them to req.body to be accessed
