@@ -3,11 +3,13 @@ import './App.css';
 
 function App() {
 
-  fetch('/api')
-    .then(r => r.json())
-    .then(d => console.log(d))
-    .catch(e => console.log(e))
-
+  useEffect(() => {
+    fetch('/api')
+      .then(r => r.json())
+      .then(d => console.log(d))
+      .catch(e => console.log(e))  
+  }, [])
+  
   return (
     <div className="App">
       <header className="App-header">
