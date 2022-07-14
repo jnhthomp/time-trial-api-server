@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 const Mongo = require('mongodb').MongoClient;
 require('dotenv').config();
+const PORT = process.env.PORT || 5000 // Get port from .env or set manually to 5000
 
 /**
  * *DB Initialization/Connection
@@ -308,6 +309,6 @@ function convertTimeStringToNum(timeAsStr){
   return seconds
 }
 
-app.listen(process.env.PORT, () => { 
-  console.log(`Server running on port ${process.env.PORT}`)
+app.listen(PORT, () => { 
+  console.log(`Server running on port ${PORT}`)
 })
