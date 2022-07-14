@@ -41,7 +41,7 @@ const requestLogger = (req, res, nxt) => {
 
 app.set('view engine', 'ejs');
 app.use('cors')
-app.use(express.static('public')) // Files in public folder don't need routes created
+app.use(express.static('client/build')) // Files in public folder don't need routes created
 app.use(express.urlencoded({ extended: true })) // https://stackoverflow.com/a/51844327/9059589 - Allows incoming data to be strings, arrays, or objects with nested objects
 app.use(express.json()) // Parses incoming json requests (such as in a head) and adds them to req.body to be accessed
 app.use(requestLogger) // Log request data to console //!Must be after urlencoded() && json() to output body content for objects
@@ -58,6 +58,11 @@ app.use(requestLogger) // Log request data to console //!Must be after urlencode
  *      ?Consider creating entry with id: 'about' or something to access a document containing track data
  **  - /api/:game/:trackName POST => Add a time to a tracks leaderboard (Include object with driverInitials and time in req.body)
  */
+
+app.get('/', (req, res) => {
+  res.sendFile('/client/build/index.html')
+})
+
 // // +Return list of all games (all databases available to client connection)
 // app.get('/', async (req, res) => {
 //   try{
