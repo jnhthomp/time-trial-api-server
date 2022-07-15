@@ -3,6 +3,7 @@ import './App.css';
 import MainHeader from './Components/MainHeader/MainHeader';
 import Card from './Components/UI/Card.jsx';
 import PickList from './Components/PickList/PickList';
+import ResultList from './Components/ResultList/ResultList';
 
 function App() {
   const [gameData, setGameData] = useState({type: null, data:[]});
@@ -31,10 +32,11 @@ function App() {
     if(itemType === 'game'){
       url += `/${itemName}`
     } else if(itemType === 'track'){
-      url += curGame
-      url += itemName
+      url += `/${curGame}`
+      url += `/${itemName}`
     }
 
+    console.log(url);
     let fetchedData = await fetch(url)
       .then((response) => response.json())
       .then((data) => data)
@@ -42,7 +44,7 @@ function App() {
     // Update state
     const newGameDataType = itemType === 'game' ? 'track' : 'result';
     const newGameData = fetchedData;
-    console.log(newGameData)
+    
     // gameData needs to hold fetched tracks or time data (whatever was fetched)
     // gameData needs to be updated to what type of data it is holding
     setGameData({ type: newGameDataType, data: newGameData })
@@ -56,7 +58,14 @@ function App() {
     }
   }
 
-  console.log(gameData, curGame, curTrack)
+  // Determine content to show
+  const content = gameData.type === 'game' || gameData.type === 'track' ?
+    <PickList
+      list={gameData}
+      fetchListItem={(itemName, itemType) => fetchData(itemName, itemType)}
+    /> :
+    <ResultList list={gameData}/>
+
   return (
     <div className="App">
       <MainHeader/>
@@ -64,10 +73,7 @@ function App() {
         {
           gameData.data.length === 0 ? 
             <p><span>Loading...</span></p> : 
-            <PickList 
-              list={gameData}
-              fetchListItem={(itemName, itemType) => fetchData(itemName, itemType)}
-            />
+            content
         }
       </Card>
       
