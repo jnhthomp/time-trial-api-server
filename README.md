@@ -89,17 +89,17 @@ This is an Express based application server that connects with a MongoDB instanc
   - Make sure links in ejs file link to ejs route and not api route
 
 - Add React frontend: https://www.youtube.com/watch?v=xwovj4-eM3Y (Do in new git branch)
-  - Remove EJS endpoints from server (comment out for now)
-  - Within project create new react app with below script
+  - ~~Remove EJS endpoints from server (comment out for now)~~
+  - ~~Within project create new react app with below script~~
     - `$npx create-react-app client`
-  - Remove `client/.git` and `client/.gitignore`
-  - Ensure all npm dependencies are install for server and client
+  - ~~Remove `client/.git` and `client/.gitignore`~~
+  - ~~Ensure all npm dependencies are installed for server and client~~
     - `npm install && cd client && npm install`
-  - Ensure that port is set to an environment variable || 5000
-    - Change to output port number when server starts
+  - ~~Ensure that port is set to an environment variable || 5000~~
+    - ~~Change to output port number when server starts~~
     - Do not set port to 3000 as react will likely run on that and cause issues when running server and client concurrently
-    - - May have to add PORT 5000 as an env variable in heroku
-  - Add proxy to react client
+    - May have to add PORT 5000 as an env variable in heroku
+  - ~~Add proxy to react client~~
     - in `client/package.json` add new item:
         - ```json
           {
@@ -107,36 +107,40 @@ This is an Express based application server that connects with a MongoDB instanc
             "proxy" : "http://localhost:5000"
           }
           ```
-  - Add a simple fetch request to react to ensure that the connection between client and server works
+  - ~~Add a simple fetch request to react to ensure that the connection between client and server works~~
     - `fetch('/api')` Should be able to use this because of the proxy line that was added to `package.json` previously
-  - Install `CORS`
+  - ~~Install `CORS`~~
     - `npm install cors`
-  - Import cors to `server.js`
+  - ~~Import cors to `server.js`~~
     - ```js
       // Near top with other app.use methods
       var cors = require('cors');
       app.use(cors());
       ```
-  - Make react pages available 
+  - ~~Make react pages available ~~
     - Change: `app.use(express.static('public')) // Files in public folder don't need routes created`
     - To: `app.use(express.static('client/build'))`
-  - set server root route (`'/'` to `/client/build/index.html`)
-  - Set routes not defined to go to this root route as well
+  - ~~set server root route (`'/'` to `/client/build/index.html`)~~
+  - Set routes not defined to go to this root route
     - ```js
       app.get('*', (req, res) => {
         res.sendFile('/client/build/index.html')
       })
       ```
-  - Build react app
+  - ~~Build react app~~
     - `$cd client && npm run build`
-  - Test locally by starting express server and react server
+  - ~~Test locally by starting express server and react server~~
     - `$npm run start`
     - (in new tab) `$cd client && npm run start`
-  - Add script to `package.json`
+  - ~~Add script to `package.json`~~
     - `"heroku-postbuild":"cd client && npm install && npm run build"`
-  - Make sure that client node_modules are included in `.gitignore`
-  - Make commit and merge git changes back to main branch
-  - Push app to heroku
+  - ~~Make sure that client node_modules are included in `.gitignore`~~
+  - Build sweet react app that fetches games on initial page load
+    - Allow each loaded game to contain a button that will make a fetch request for that games tracks
+    - Same idea for the tracks where they get a button to load times for a track
+    - When showing a track display leaderboard
+    - Add form (as modal?) to allow user to submit a new time from anywhere
+  - Push app to heroku (set PORT 5000 env var if needed but probably not)
 
 ## Lessons Learned
 - Creating Node server applications
