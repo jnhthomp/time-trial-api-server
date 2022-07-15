@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
+import MainHeader from './Components/MainHeader/MainHeader';
+import Card from './Components/UI/Card.jsx';
 
 function App() {
   const [gameData, setGameData] = useState({type: null, data:[]})
@@ -23,25 +25,18 @@ function App() {
   
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <MainHeader/>
+      <Card>
         <ul>
-          {gameData.data.length === 0 ?
-            <li>nothing...</li> :
-            gameData.data.map((data, i) => { 
-              return <li key={i}>{data.name}</li>
-             })
-          }
+        {gameData.data.length === 0 ?
+          <li>nothing...</li> :
+          gameData.data.map((data, i) => {
+            return <li key={i}>{data.name}</li>
+          })
+        }
         </ul>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </Card>
+      
     </div>
   );
 }
