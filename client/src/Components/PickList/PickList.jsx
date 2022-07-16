@@ -1,7 +1,7 @@
 import React from 'react'
 
 const PickList = (props) => {
-  console.log(props.list)
+  // console.log(props.list)
   
   const selectListItem = (itemName, itemType) => {
     props.fetchListItem(itemName, itemType)

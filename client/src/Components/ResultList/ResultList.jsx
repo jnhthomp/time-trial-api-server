@@ -1,7 +1,7 @@
 import React from 'react'
 
 const ResultList = (props) => {
-  console.log(props.list.data)
+  // console.log(props.list.data)
   
   // Store all result data
   const game = props.list.data.game
@@ -35,6 +35,7 @@ const ResultList = (props) => {
           {tableRows}
         </tbody>
       </table>
+      <button onClick={props.showForm}>Show Form</button>
     </React.Fragment>
   )
 }
