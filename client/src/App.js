@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import MainHeader from './Components/MainHeader/MainHeader';
 import Card from './Components/UI/Card.jsx';
 import PickList from './Components/PickList/PickList';
 import ResultList from './Components/ResultList/ResultList';
+import NewTimeForm from './Components/NewTimeForm/NewTimeForm';
 
 function App() {
+  const [showForm, setShowForm] = useState(false)
   const [gameData, setGameData] = useState({type: null, data:[]});
   const [curGame, setCurGame] = useState();
   const [curTrack, setCurTrack] = useState();
@@ -36,7 +38,7 @@ function App() {
       url += `/${itemName}`
     }
 
-    console.log(url);
+    // console.log(url);
     let fetchedData = await fetch(url)
       .then((response) => response.json())
       .then((data) => data)
@@ -58,18 +60,27 @@ function App() {
     }
   }
 
+  const onHideForm = () => { 
+    setShowForm(false);
+  }
+
+  const onShowForm = () => {
+    setShowForm(true);
+  }
   // Determine content to show
   const content = gameData.type === 'game' || gameData.type === 'track' ?
     <PickList
       list={gameData}
       fetchListItem={(itemName, itemType) => fetchData(itemName, itemType)}
     /> :
-    <ResultList list={gameData}/>
+    <ResultList list={gameData} showForm={onShowForm}/>
 
+  // console.log(gameData)
   return (
     <div className="App">
+      {showForm && <NewTimeForm onHideForm={onHideForm} curGame={curGame} curTrack={curTrack}/>}
       <MainHeader/>
-      <Card>
+      <Card showform={onShowForm}>
         {
           gameData.data.length === 0 ? 
             <p><span>Loading...</span></p> : 
