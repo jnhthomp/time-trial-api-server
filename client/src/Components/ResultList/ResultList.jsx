@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from './ResultList.module.css';
 
 const ResultList = (props) => {
   // console.log(props.list.data)
@@ -10,19 +11,21 @@ const ResultList = (props) => {
 
   // Create a table row for each result in leaderboard array
   const tableRows = leaderboard.map((result, index) => { 
+    const trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : ''
     return (
       <tr key={result._id}>
-        <td>{index + 1}</td>
+        <td>{trophy || index + 1}</td>
         <td>{result.driverInitial}</td>
         <td>{result.time}</td>
         <td>{result.car}</td>
       </tr>
     )
   })
+
   return (
-    <React.Fragment>
-      <h1>{game}: {track}</h1>
-      <table>
+    <div className={classes.tableContainer}>
+      <h1 className={classes.resTitle}>{game}: {track}</h1>
+      <table className={classes.resTable}>
         <thead>
         <tr>
           <th>Position</th>
@@ -36,7 +39,7 @@ const ResultList = (props) => {
         </tbody>
       </table>
       <button onClick={props.showForm}>Show Form</button>
-    </React.Fragment>
+    </div>
   )
 }
 
