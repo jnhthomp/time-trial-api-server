@@ -60,6 +60,13 @@ function App() {
     }
   }
 
+  const updateLeaderboard = (newLeaderboard) => {
+    // set gameData to new leaderboard data
+    setGameData({type: 'result', data: {game: newLeaderboard.game, track: newLeaderboard.track, leaderboard: newLeaderboard.leaderboard}})
+    setCurGame(newLeaderboard.game)
+    setCurTrack(newLeaderboard.track)
+  }
+
   const onHideForm = () => { 
     setShowForm(false);
   }
@@ -78,7 +85,7 @@ function App() {
   // console.log(gameData)
   return (
     <div className="App">
-      {showForm && <NewTimeForm onHideForm={onHideForm} curGame={curGame} curTrack={curTrack}/>}
+      {showForm && <NewTimeForm onHideForm={onHideForm} curGame={curGame} curTrack={curTrack} updateLeaderboard={updateLeaderboard}/>}
       <MainHeader/>
       <Card showform={onShowForm}>
         {

@@ -126,7 +126,6 @@ const NewTimeForm = (props) => {
     } else{
       minutesAreValid = true
       // Find out if value can convert to a number, if not then secondsAreValid = false
-      console.log(typeof +value)
       if(isNaN(value)){
         secondsAreValid = false
       }
@@ -161,11 +160,40 @@ const NewTimeForm = (props) => {
       return;
     }
 
+    // Log form input to console
     console.log(`Game: ${gameInputValue}`)
     console.log(`Track: ${trackInputValue}`)
     console.log(`Driver: ${driverInputValue}`)
     console.log(`Time: ${timeInputValue}`)
     console.log(`Car: ${carInputValue}`)
+
+    // Bundle form data and make a post request
+    // Create url with the input game and track
+    const url = `/api/${gameInputValue}/${trackInputValue}`
+    const leaderboardData = {
+      driverInitial: driverInputValue,
+      time: timeInputValue,
+      car: carInputValue
+    }
+
+    // Post results
+    await fetch(url, {
+      method: "post",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(leaderboardData)
+    })
+      .then(response => response)
+      .catch(error => {console.log(error)})
+
+    // Refetch leaderbaord
+    const newLeaderboard = await fetch(url)
+      .then(response => response.json())
+      .then(data => data)
+    
+    // Submit new leaderboard data to <App> to update the current state
+    props.updateLeaderboard(newLeaderboard)
 
     // Reset form inputs
     resetGameInput()
@@ -173,6 +201,9 @@ const NewTimeForm = (props) => {
     resetDriverInput()
     resetTimeInput()
     resetCarInput()
+
+    // Hide form
+    props.onHideForm()
   }
 
   // Apply error classes based on form state
