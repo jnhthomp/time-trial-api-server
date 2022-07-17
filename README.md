@@ -3,12 +3,12 @@
 This application was created to act as a server/API to interact with a MongoDB database. It is meant to allow me and my friends to add racing games, tracks, and times so that we can compare times across games more easily. This application will have a front end interface but will also allow interaction with a discord bot I have also built. This way we can update our times simply by sending a message in our discord server.
 
 <!-- Application gif -->
-<!-- <a href="https://jtdev.netlify.app/" target="_blank" rel="noreferrer"> <img src="" alt="JTDEV" width="100%" height="auto" /> </a>  -->
+<a href="https://jtdev.netlify.app/" target="_blank" rel="noreferrer"> <img src="https://drive.google.com/uc?id=1nQ9bFzzWO1Iuq6pjtcWAZR-Y5H_3rIxw" alt="JTDEV" width="100%" height="auto" /> </a> 
 
 ## How It's Made:
 **Tech used:** <!--JavaSCript =>--><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <!-- Node.js =>--><a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a><!-- MongoDB =>--><a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="MongoDB" width="40" height="40"/> </a><!-- Postman =>--><a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="40" height="40"/> </a><!-- Express =>--><a href="http://expressjs.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="Express JS" width="40" height="40"/> </a> 
 
-This is an Express based application server that connects with a MongoDB instance serve up relevant data using ejs files to dynamically generate the displayed content. By utilizing a versatile database such as MongoDB I can more easily make quick changes as needed.
+This is an Express based application server with a React front-end that connects with a MongoDB instance serve up relevant data using ejs files to dynamically generate the displayed content. By utilizing a versatile database such as MongoDB I can more easily make quick changes as needed.
 
 ### Available Endpoints
 - `/api`
@@ -42,13 +42,40 @@ This is an Express based application server that connects with a MongoDB instanc
     - Use connect button to get connection string and make note
 2. Create .env file to store connection string and port to use on dev environment
     - See `.env-example` and replace `<USERNAME>` and `<PASSWORD>` with your db specific username and password (NOT MongoDB account username and password)
-3. Install npm dependencies
+3. Install server npm dependencies
     - ```bash
       $npm install
       ```
-4. To run in dev environment with nodemon:
+4. Install client npm dependencies and build react project
+    - ```bash
+      $cd client && npm install && npm run build
+      ```
+5. To run server in dev environment with nodemon:
     - ```bash
       $npm run dev
+      ```
+
+To make changes to react project
+1. Start server
+    - ```bash
+      #from project root
+      $npm run start
+      ```
+2. Start react project
+    - ```bash
+      $cd client && npm run start
+      ```
+3. Navigate to `http://localhost:3000` in your browser (default react starting port - see logs of previous command to check for other port if not running here)
+4. Make any changes to react that you want
+5. Confirm build version works properly
+    - ```bash
+      #from projRoot/client
+      $npm run build
+      ```
+6. Switch to server cli, `ctrl + c` to stop and restart server with below command
+    - ```bash
+      #from projRoot/
+      $npm run start
       ```
 
 ## Optimizations
@@ -88,70 +115,20 @@ This is an Express based application server that connects with a MongoDB instanc
   - Update links in discord bot to match these non routes (embed object should link to ejs route but data should come from api route)
   - Make sure links in ejs file link to ejs route and not api route
 
-- Add React frontend: https://www.youtube.com/watch?v=xwovj4-eM3Y (Do in new git branch)
-  - ~~Remove EJS endpoints from server (comment out for now)~~
-  - ~~Within project create new react app with below script~~
-    - `$npx create-react-app client`
-  - ~~Remove `client/.git` and `client/.gitignore`~~
-  - ~~Ensure all npm dependencies are installed for server and client~~
-    - `npm install && cd client && npm install`
-  - ~~Ensure that port is set to an environment variable || 5000~~
-    - ~~Change to output port number when server starts~~
-    - Do not set port to 3000 as react will likely run on that and cause issues when running server and client concurrently
-    - May have to add PORT 5000 as an env variable in heroku
-  - ~~Add proxy to react client~~
-    - in `client/package.json` add new item:
-        - ```json
-          {
-            ... (json above)
-            "proxy" : "http://localhost:5000"
-          }
-          ```
-  - ~~Add a simple fetch request to react to ensure that the connection between client and server works~~
-    - `fetch('/api')` Should be able to use this because of the proxy line that was added to `package.json` previously
-  - ~~Install `CORS`~~
-    - `npm install cors`
-  - ~~Import cors to `server.js`~~
-    - ```js
-      // Near top with other app.use methods
-      var cors = require('cors');
-      app.use(cors());
-      ```
-  - ~~Make react pages available ~~
-    - Change: `app.use(express.static('public')) // Files in public folder don't need routes created`
-    - To: `app.use(express.static('client/build'))`
-  - ~~set server root route (`'/'` to `/client/build/index.html`)~~
-  - Set routes not defined to go to this root route
-    - ```js
-      app.get('*', (req, res) => {
-        res.sendFile('/client/build/index.html')
-      })
-      ```
-  - ~~Build react app~~
-    - `$cd client && npm run build`
-  - ~~Test locally by starting express server and react server~~
-    - `$npm run start`
-    - (in new tab) `$cd client && npm run start`
-  - ~~Add script to `package.json`~~
-    - `"heroku-postbuild":"cd client && npm install && npm run build"`
-  - ~~Make sure that client node_modules are included in `.gitignore`~~
-  - Build sweet react app that fetches games on initial page load
-    - Allow each loaded game to contain a button that will make a fetch request for that games tracks
-    - Same idea for the tracks where they get a button to load times for a track
-    - When showing a track display leaderboard
-    - Add form (as modal?) to allow user to submit a new time from anywhere
-  - Push app to heroku (set PORT 5000 env var if needed but probably not)
+- Add back button to go to previous pick screen when browsing react application
 
 ## Lessons Learned
 - Creating Node server applications
 - Interacting with MongoDB via CRUD actions
+- Connecting React applications with a backend
+- Deploying a backend and front-end application within the same project
 - Using developer tools such as Nodemon
-- Dynamically rendering data server side with ejs files
+- Dynamically rendering data server side with ejs files (prior to react update)
 
 ## Resources: 
-- https://fullstackopen.com/en/part3/node_js_and_express#the-visual-studio-code-rest-client
-- https://zellwk.com/blog/crud-express-mongodb/
-- https://www.youtube.com/watch?v=ayNI9Q84v8g
+- REST Client API testing: https://fullstackopen.com/en/part3/node_js_and_express#the-visual-studio-code-rest-client
+- MongoDB w/ Express: https://zellwk.com/blog/crud-express-mongodb/ & https://www.youtube.com/watch?v=ayNI9Q84v8g
+- Adding React To Express and Deploying to Heroku: https://www.youtube.com/watch?v=xwovj4-eM3Y&list=LL&index=1&t=831s
 
 ## Other Examples:
 Take a look at other examples from my <a href="https://jtdev.netlify.app/">portfolio</a> using the lessons learned from these classes:
