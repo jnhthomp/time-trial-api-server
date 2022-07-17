@@ -27,6 +27,20 @@ function App() {
       .catch(error => console.log(error));
   }, []);
 
+  const setGameList = async () => {
+    // Initial fetch to get list of games
+    await fetch('/api')
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data) // Log initial fetch request
+        setGameData({
+          type: 'game',
+          data
+        })
+      })
+      .catch(error => console.log(error));
+  }
+
   // Fetch Data and update state to reflect fetched data and what kind of data is being stored
   const fetchData = async (itemName, itemType) => {
     // Build a fetch url string based on the selected
@@ -86,7 +100,7 @@ function App() {
   return (
     <div className="App">
       {showForm && <NewTimeForm onHideForm={onHideForm} curGame={curGame} curTrack={curTrack} updateLeaderboard={updateLeaderboard}/>}
-      <MainHeader/>
+      <MainHeader titleClick={setGameList} showForm={onShowForm}/>
       <Card showform={onShowForm}>
         {
           gameData.data.length === 0 ? 
