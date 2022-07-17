@@ -24,7 +24,22 @@ const NewTimeForm = (props) => {
     updateValue: gameInputChangeHandler,
     updateTouched: gameInputTouchHandler,
     reset: resetGameInput
-  } = useInput(value => value.length > 5);
+  } = useInput(value => {
+    // Game input validitation method
+    //   - cannot have spaces (use '_' instead)
+    //   - must be lowercase
+    let doesNotHaveSpaces = false;
+    let isLowerCase = false;
+
+    if(value.indexOf(' ') < 0){
+      doesNotHaveSpaces = true;
+    }
+
+    if(value === value.toLowerCase()){
+      isLowerCase = true;
+    }
+    return doesNotHaveSpaces && isLowerCase;
+  });
 
   const { // track input management and validation
     value: trackInputValue, // 
@@ -33,7 +48,22 @@ const NewTimeForm = (props) => {
     updateValue: trackInputChangeHandler,
     updateTouched: trackInputTouchHandler,
     reset: resetTrackInput
-  } = useInput(value => value.length > 0);
+  } = useInput(value => {
+    // Track input validation method
+    //   - cannot have spaces (use '_' instead)
+    //   - must be lowercase
+    let doesNotHaveSpaces = false;
+    let isLowerCase = false;
+
+    if (value.indexOf(' ') < 0) {
+      doesNotHaveSpaces = true;
+    }
+
+    if (value === value.toLowerCase()) {
+      isLowerCase = true;
+    }
+    return doesNotHaveSpaces && isLowerCase;
+  });
 
   const { // driver input management and validation
     value: driverInputValue, // 
@@ -42,7 +72,20 @@ const NewTimeForm = (props) => {
     updateValue:driverInputChangeHandler,
     updateTouched: driverInputTouchHandler,
     reset: resetDriverInput
-  } = useInput(value => value.length > 0);
+  } = useInput(value => {
+    // Driver input validation method
+    //   - should have length of 3
+    //   - Only contains letters in english alphabet
+    //   - must be capital
+    
+    const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+    // Chars are valid checks that letters are in english alphabet AND are capital because of key
+    const charsAreValid = value.split('').reduce((acc, letter) => validChars.includes(letter) && acc === true ? acc : false, true)
+    const lengthIsValid = value.length === 3
+
+    return charsAreValid && lengthIsValid
+  });
 
   const { // time input management and validation
     value: timeInputValue, // 
@@ -51,7 +94,46 @@ const NewTimeForm = (props) => {
     updateValue: timeInputChangeHandler,
     updateTouched: timeInputTouchHandler,
     reset: resetTimeInput
-  } = useInput(value => value.length > 0);
+  } = useInput(value => {
+    // Time input validation method
+    //  - Check if given in seconds or as string
+    //  - String checks:
+    //    - Minutes must be positive
+    //    - Seconds must be positive and greater than 0
+    //      - seconds should be fixed to three decimals
+    //  
+    let minutesAreValid = true;
+    let secondsAreValid = true;
+
+    // If ':' is in string then validate string form
+    if(value.indexOf(':') > -1){
+      // Valid string '1:23.456'
+      let splitVal = value.split(':')
+      if(splitVal.length !== 2){
+        minutesAreValid = false;
+        secondsAreValid = false;
+      }
+
+      let [minutes, seconds] = splitVal
+      minutes = Number(minutes)
+      seconds = Number(seconds)
+      if (minutes < 0) {
+        minutesAreValid = false
+      }
+      if(seconds < 0 || seconds > 60){
+        secondsAreValid = false
+      }
+    } else{
+      minutesAreValid = true
+      // Find out if value can convert to a number, if not then secondsAreValid = false
+      console.log(typeof +value)
+      if(isNaN(value)){
+        secondsAreValid = false
+      }
+    }
+
+    return minutesAreValid && secondsAreValid
+  });
 
   const { // car input management and validation
     value: carInputValue, // 
@@ -60,7 +142,7 @@ const NewTimeForm = (props) => {
     updateValue: carInputChangeHandler,
     updateTouched: carInputTouchHandler,
     reset: resetCarInput
-  } = useInput(value => value.length > 0);
+  } = useInput(value => typeof 'string');
 
 
   // Initially form is invalid since no input
@@ -95,24 +177,24 @@ const NewTimeForm = (props) => {
 
   // Apply error classes based on form state
   let gameInputClassList = !gameInputHasError ?
-    'form-control' :
-    'form-control invalid'
+    `${classes['form-control']}` :
+    `${classes['form-control']} ${classes.invalid}`
   
   let trackInputClassList = !trackInputHasError ?
-    'form-control' :
-    'form-control invalid'
+    `${classes['form-control']}` :
+    `${classes['form-control']} ${classes.invalid}`
 
   let driverInputClassList = !driverInputHasError ?
-    'form-control' :
-    'form-control invalid'
+    `${classes['form-control']}` :
+    `${classes['form-control']} ${classes.invalid}`
 
   let timeInputClassList = !timeInputHasError ?
-    'form-control' :
-    'form-control invalid'
+    `${classes['form-control']}` :
+    `${classes['form-control']} ${classes.invalid}`
 
   let carInputClassList = !carInputHasError ?
-    'form-control' :
-    'form-control invalid'
+    `${classes['form-control']}` :
+    `${classes['form-control']} ${classes.invalid}`
 
   
 
@@ -140,7 +222,7 @@ const NewTimeForm = (props) => {
           />
         </div>
         {/* Display error message for game */}
-        { gameInputHasError && <p>Game cannot have spaces (use '_' instead) and must be lowercase</p>}
+        {gameInputHasError && <p className={classes['error-text']}>Game cannot have spaces (use '_' instead) and must be lowercase</p>}
         {/* Track input */}
         <div className={trackInputClassList}>
           <label htmlFor='trackInput'>Track:</label>
@@ -153,7 +235,7 @@ const NewTimeForm = (props) => {
           />
         </div>
         {/* Display error message for track */}
-        {trackInputHasError && <p>Track cannot have spaces (use '_' instead) and must be lowercase</p>}
+        {trackInputHasError && <p className={classes['error-text']}>Track cannot have spaces (use '_' instead) and must be lowercase</p>}
         {/* Driver input */}
         <div className={driverInputClassList}>
           <label htmlFor='driverInput'>Driver Initials:</label>
@@ -166,7 +248,7 @@ const NewTimeForm = (props) => {
           />
         </div>
         {/* Display error message for driver */}
-        {driverInputHasError && <p>Driver initials should be three capital letters</p>}
+        {driverInputHasError && <p className={classes['error-text']}>Driver initials should be three capital letters</p>}
         {/* Time input */}
         <div className={timeInputClassList}>
           <label htmlFor='timeInput'>Time:</label>
@@ -179,7 +261,9 @@ const NewTimeForm = (props) => {
           />
         </div>
         {/* Display error message for time */}
-        {timeInputHasError && <p>Time should be in one of the following formats - Minutes: 1:23.456 or Seconds: '83.456'</p>}
+        {timeInputHasError && <p className={classes['error-text']}>Time should be in one of the following formats:
+          <br/>- Minutes: '1:23.456'
+          <br />- Seconds: '83.456'</p>}
         {/* Car input */}
         <div className={carInputClassList}>
           <label htmlFor='carInput'>Car:</label>
@@ -192,10 +276,11 @@ const NewTimeForm = (props) => {
           />
         </div>
         {/* Display error message for game */}
-        {gameInputHasError && <p>This should just be a string</p>}
+        {gameInputHasError && <p className={classes['error-text']}>This should just be a string</p>}
       </div>
       <div className={classes['form-actions']}>
         <button disabled={!formIsValid}>Submit</button>
+        <button onClick={props.onHideForm}>Close</button>
       </div>
     </form>
   

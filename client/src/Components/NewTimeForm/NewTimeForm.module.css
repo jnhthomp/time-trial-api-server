@@ -4,17 +4,25 @@
     - control-group
 */
 .form-control {
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 5rem;
 }
 
 .form-control input,
 .form-control label {
   display: block;
+  margin-right: .5rem;
 }
 
 .form-control label {
+  width: 150px;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+}
+
+.form-control input {
+  width: 100%;
 }
 
 .form-control input,
@@ -35,7 +43,8 @@
 
 .control-group {
   display: flex;
-  column-gap: 1rem;
+  flex-direction: column;
+  align-items: left;
   flex-wrap: wrap;
 }
 
@@ -89,4 +98,5 @@ button:disabled:hover {
 
 .error-text {
   color: #b40e0e;
+  text-align: center;
 }
