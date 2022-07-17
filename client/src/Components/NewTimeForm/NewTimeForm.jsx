@@ -135,7 +135,10 @@ const NewTimeForm = (props) => {
     updateValue: carInputChangeHandler,
     updateTouched: carInputTouchHandler,
     reset: resetCarInput
-  } = useInput(value => typeof 'string');
+  } = useInput(value => {
+    
+    return typeof value === 'string' || value === ''
+  });
 
 
   // Initially form is invalid since no input
@@ -301,7 +304,7 @@ const NewTimeForm = (props) => {
           />
         </div>
         {/* Display error message for game */}
-        {gameInputHasError && <p className={classes['error-text']}>This should just be a string</p>}
+        {carInputHasError && <p className={classes['error-text']}>This should just be a string</p>}
       </div>
       <div className={classes['form-actions']}>
         <button disabled={!formIsValid}>Submit</button>
