@@ -4,18 +4,12 @@ import useInput from '../../hooks/use-input'
 
 const NewTimeForm = (props) => {
   //TODO: 
-  // - Create validation methods for each input field
   // - Create method to check if App state has values for curGame, and curTrack
   //    If so then run a method that will run 'gameInputChangeHandler' and 'trackInputChangeHandler'
   //    These two methods should accept the values for curGame and curTrack respectively
   //    This should load the form with the current game and track already filled
-  // - Create submitTimeHandler to bundle input values
-  //    - Then submit these input values to the api (create a path using the submitted data)
-  //    - Then update fetch to get updated results that include the new time
-  //    - Then set state to these new updated results to be displayed
   // - Receive curGame via props
   // - Receive curTrack via props
-  // - Update to use this format: https://github.com/jnhthomp/react-forms-practice
 
   const { // game input management and validation
     value: gameInputValue, // 
