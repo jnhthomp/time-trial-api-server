@@ -184,6 +184,7 @@ app.get('/api/:gameName', async (req, res) => {
 
     
     renamedTracks = renamedTracks.map((track) => ({name: track.name}))
+    sortedRenamedTracks = renamedTracks.sort((a, b) => a.name < b.name ? -1 : 1)
     console.log(renamedTracks)
     // res.render('path_select.ejs', { info: renamedTracks, type: 'Track', path })
     res.json(renamedTracks)
