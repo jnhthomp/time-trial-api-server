@@ -8,12 +8,14 @@
   width: 100%;
   justify-content: center;
 }
-.main-header .headerHide {
+.main-header .headerBack {
   margin-right: auto;
-  visibility: hidden;
+  background-color: #46108b;
+  color: white;
+  border-radius: .3rem;
 }
 
-.main-header .headerBtn {
+.main-header .headerAddTime {
   margin-left: auto;
   background: #0ba0a6;
   color: white;

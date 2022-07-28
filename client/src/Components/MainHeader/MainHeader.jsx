@@ -5,9 +5,9 @@ const MainHeader = (props) => {
   return (
     <header className={classes['main-header']}>
       <ul>
-        <li className={classes.headerHide}></li>{/* new; invisible spacer item */}
+        <li className={classes.headerBack} onClick={props.fetchPrevious}>Back</li>{/* new; invisible spacer item */}
         <li className={classes.headerCenter} onClick={props.titleClick}>Time Trials App</li>
-        <li className={classes.headerBtn} onClick={props.showForm}>Add Time</li>
+        <li className={classes.headerAddTime} onClick={props.showForm}>Add Time</li>
       </ul>
     </header>
   )

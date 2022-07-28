@@ -37,9 +37,24 @@ function App() {
           type: 'game',
           data
         })
+        setCurGame(undefined)
+        setCurTrack(undefined)
       })
       .catch(error => console.log(error));
   }
+
+  // const setTrackList = async (game) => {
+  //   await fetch(`/api/${game}`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       setGameData({
+  //         type: 'track',
+  //         data
+  //       })
+  //       setCurGame(game)
+  //       setCurTrack(undefined);
+  //     })
+  // }
 
   // Fetch Data and update state to reflect fetched data and what kind of data is being stored
   const fetchData = async (itemName, itemType) => {
@@ -74,6 +89,26 @@ function App() {
     }
   }
 
+  const fetchPrevious = async () => {
+    // If on games listing, do nothing there is no previous page
+    // TODO: introduce state and method to hide the button completely when on games listing so this shouldn't be triggered
+    if(gameData.type === 'game' && curGame === undefined && curTrack === undefined){
+      console.log('On games listing...')
+      return
+    } else if(gameData.type === 'track' && curGame !== undefined && curTrack === undefined){
+      // If on track listing, re-fetch games data (root fetch route), then update state with results
+      console.log(`On tracks listing for ${curGame}...`)
+      // Initial fetch to get list of games
+      await setGameList()
+    } else if(gameData.type === 'result' && curGame !== undefined && curTrack !== undefined){
+      // If on a results listing, refetch track data (note curGame and build route with it), update state with results
+      console.log(`On results listing for ${curGame}/${curTrack}`)
+      return
+    }
+
+    
+  }
+
   const updateLeaderboard = (newLeaderboard) => {
     // set gameData to new leaderboard data
     setGameData({type: 'result', data: {game: newLeaderboard.game, track: newLeaderboard.track, leaderboard: newLeaderboard.leaderboard}})
@@ -100,7 +135,7 @@ function App() {
   return (
     <div className="App">
       {showForm && <NewTimeForm onHideForm={onHideForm} curGame={curGame} curTrack={curTrack} updateLeaderboard={updateLeaderboard}/>}
-      <MainHeader titleClick={setGameList} showForm={onShowForm}/>
+      <MainHeader titleClick={setGameList} showForm={onShowForm} fetchPrevious={fetchPrevious}/>
       <Card showform={onShowForm}>
         {
           gameData.data.length === 0 ? 
