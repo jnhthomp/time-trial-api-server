@@ -13,12 +13,13 @@ module.exports = {
       
       // Render ejs, passing in the list of times to render and track/game details
       // TODO: Get values before adding them to the object so they aren't extracted within to clean up code a little
+      // TODO: BUG - If timeList is empty array (new track) then no values are loaded as arguments causing an issue
       res.render('time.ejs', { 
         times: timeList, 
         gameName: timeList[0].trackId.gameId.name, 
-        gametrackId: req.params.trackId, 
+        trackId: req.params.trackId, 
         trackName: timeList[0].trackId.name,
-        trackId: timeList[0].tracKId})
+        })
     } catch (err) { // Handle errors from above request
       console.log(err) // Log errors to the console
     }
