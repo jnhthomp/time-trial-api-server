@@ -98,7 +98,7 @@ Optimizations will be discovered as 2.0 is created as has some time to be tested
 - Relational MongoDB: https://vegibit.com/mongoose-relationships-tutorial/
 
 ## Other Examples:
-Take a look at other examples from my <a href="https://jtdev.netlify.app/">portfolio</a>:
+Take a look at other examples from my <a href="https://jtdev.netlify.app/">portfolio</a>
 
 **Blog Site W/ Categories and Authentification:** https://github.com/jnhthomp/alpha-blog2
 
