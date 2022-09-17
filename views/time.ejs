@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title> <!-- Title to display in tab -->
+  <link rel="stylesheet" href="/css/style.css"> <!-- page css -->
+  <script defer src="/js/main.js"></script> <!-- js for page, defer loads after page load -->
+</head>
+
+<body>
+  <!-- Page heading (populate with chosen track and game)-->
+  <h1>Time for: <%=gameName%> - <%=trackName%></h1>
+  <!-- Create list of times -->
+  <ul>
+    <!-- Loop through tracks array passed into ejs on render -->
+    <% times.forEach( el=> { %>
+      <!-- Create a list item for each element -->
+      <li class='timeItem' data-id='<%=el._id%>'>
+        <!-- add mongodb document id as data-id attribute for making requests specific to this element-->
+        <!-- Display time name as link to view more details about that time -->
+        <span>
+          <!-- TODO: Create route time/view/:timeId to view details for an individual time  and enable link-->
+          <!-- <a href="/time/view/el.id"> -->
+            <%= el.time %>
+          <!-- </a> -->
+        </span>
+        <!-- Add delete button to each element generated -->
+        <!-- TODO: Enable delete for time -->
+        <!-- <span class='del'> Delete </span> -->
+      </li>
+      <% }) %>
+  </ul>
+
+  <!-- TODO: Add new track form below (and necessary routes/controller etc.)-->
+  <!-- Form to create/submit a new Time -->
+  <form action="/time/createTime" method='POST'>
+    <!-- text input area for time data -->
+    <!-- TODO: Add helpers to allow the server to accept string or numbers from here -->
+    <label for="time">New Time:</label><input type="text" placeholder="Enter new time" name='time'>
+    <!-- Attach hidden trackId value to add as a referenceId for this document -->
+    <input type="hidden" name="trackId" value="<%=trackId%>">
+    <!-- Submit new time -->
+    <input type="submit">
+  </form>
+</body>
+
+</html>
