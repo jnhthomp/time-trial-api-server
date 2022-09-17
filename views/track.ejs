@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title> <!-- Title to display in tab -->
+  <link rel="stylesheet" href="/css/style.css"> <!-- page css -->
+  <script defer src="/js/main.js"></script> <!-- js for page, defer loads after page load -->
+</head>
+
+<body>
+  <!-- Page heading (populate with chosen game)-->
+  <h1><%=gameName%> Tracks</h1>
+  <!-- Create list of tracks -->
+  <ul>
+    <!-- Loop through tracks array passed into ejs on render -->
+    <% tracks.forEach( el=> { %>
+      <!-- Create a list item for each element -->
+      <li class='trackItem' data-id='<%=el._id%>'>
+        <!-- add mongodb document id as data-id attribute for making requests specific to this element-->
+        <!-- Display game name as link to view that games times -->
+        <span>
+          <a href="/time/<%=el._id%>"><%= el.name %></a>
+        </span>
+        <!-- Delete button to remove track and associated times from db -->
+        <!-- <span class='del'> Delete </span> -->
+      </li>
+      <% }) %>
+  </ul>
+
+  <!-- Form to create/submit a new Track -->
+  <form action="/track/createTrack" method='POST'>
+    <!-- text input area for track name -->
+    <label for="trackName">New Track:</label>
+    <input type="text" placeholder="Enter Track Name" name='trackName'>
+    <!-- Attach hidden gameId value to add as a referenceId for this document -->
+    <input type="hidden" name="gameId" value="<%=gameId%>">
+    <!-- Submit new track -->
+    <input type="submit">
+  </form>
+</body>
+
+</html>
