@@ -1,24 +1,25 @@
 {
   "name": "time-trial-server",
-  "version": "1.0.0",
-  "description": "Server to handle api requests to a MonogDB to track time-trial data for different racing games",
+  "version": "2.0.0",
+  "description": "Server to handle api requests to a MongoDB cluster to track time-trial data across different games and tracks",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1 ",
-    "dev": "nodemon server.js",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "start": "cross-env NODE_ENV=production node server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "jtdev",
-  "license": "ISC",
+  "author": "JTDEV",
+  "license": "MIT",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.16"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
-    "mongodb": "^4.7.0"
+    "mongodb": "^4.7.0",
+    "mongoose": "^6.6.1",
+    "morgan": "^1.10.0"
   }
 }
