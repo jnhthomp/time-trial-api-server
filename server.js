@@ -43,26 +43,26 @@ app.listen(process.env.PORT, () => { // Start app on port specified in .env
 /**
  * *Tools
  */
-// +Convert seconds (stored as double in database) to a timestamp like string
-// useful for returning data in an expected format or convert for ejs display sake
-// convertSecToTimeString(95.123) => '1:35.123'
-function convertSecToTimeString(secAsNum){
-  let seconds = (secAsNum % 60).toFixed(3);
-  seconds = seconds.indexOf('.') === 1 ? '0' + seconds : seconds
-  const minutes = Math.floor(secAsNum / 60);
-  const timeStr = `${minutes}:${seconds}`
-  return timeStr
-}
+// // +Convert seconds (stored as double in database) to a timestamp like string
+// // useful for returning data in an expected format or convert for ejs display sake
+// // convertSecToTimeString(95.123) => '1:35.123'
+// function convertSecToTimeString(secAsNum){
+//   let seconds = (secAsNum % 60).toFixed(3);
+//   seconds = seconds.indexOf('.') === 1 ? '0' + seconds : seconds
+//   const minutes = Math.floor(secAsNum / 60);
+//   const timeStr = `${minutes}:${seconds}`
+//   return timeStr
+// }
 
-// +Convert seconds timestamp (displayed as string) to a number for storage in database
-// Storing time as a single number of seconds in the database makes it easier to sort results when retrieving
-// convertTimeStringToNum('1:23.456') => 83.456
-function convertTimeStringToNum(timeAsStr){
-  const timeArr = timeAsStr.split(':');
-  const minutes = +timeArr[0];
-  let seconds = +timeArr[1];
+// // +Convert seconds timestamp (displayed as string) to a number for storage in database
+// // Storing time as a single number of seconds in the database makes it easier to sort results when retrieving
+// // convertTimeStringToNum('1:23.456') => 83.456
+// function convertTimeStringToNum(timeAsStr){
+//   const timeArr = timeAsStr.split(':');
+//   const minutes = +timeArr[0];
+//   let seconds = +timeArr[1];
 
-  seconds += (minutes * 60)
+//   seconds += (minutes * 60)
 
-  return seconds
-}
+//   return seconds
+// }
