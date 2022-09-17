@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title> <!-- Title to display in tab -->
+  <link rel="stylesheet" href="css/style.css"> <!-- page css -->
+  <script defer src="js/main.js"></script> <!-- js for page, defer loads after page load -->
+</head>
+
+<body>
+  <!-- Page heading -->
+  <h1>Update Game: <%=game.name%></h1>
+  <!-- Form to update current game item -->
+  <!-- TODO: Change this to put or handle with js and try put from there -->
+  <form action="/game/updateGame" method='POST'>
+    <!-- text input area for game name 
+    -     - Default value is current game name before updating
+    -->
+    <label for="gameName">Game Name:</label>
+    <input type="text" value="<%=game.name%>" name='gameName'>
+    <!-- Attach hidden gameId value to specifiy which game to update -->
+    <input type="hidden" value="<%=game._id%>" name='gameId'/>
+    <!-- Submit updated game details -->
+    <input type="submit">
+  </form>
+</body>
+
+</html>

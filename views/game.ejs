@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title> <!-- Title to display in tab -->
+  <link rel="stylesheet" href="/css/style.css"> <!-- page css -->
+  <script defer src="/js/main.js"></script> <!-- load js after page load -->
+</head>
+
+<body>
+  <!-- Page heading -->
+  <h1>Games</h1>
+  <!-- Create list of games -->
+  <ul>
+    <!-- Loop through games array passed into ejs on render -->
+    <% games.forEach( el=> { %>
+      <!-- Create a list item for each element -->
+      <li class='gameItem' data-id='<%=el._id%>'>
+        <!-- add mongodb document id as data-id attribute for making requests specific to this element-->
+        <!-- Display game name as link to view that games tracks -->
+        <span><a href="/track/<%=el._id%>"><%= el.name %></a></span>
+        <!-- Update button to navigate to this games update page -->
+        <span><a href="/game/updateGame/<%=el._id%>">Update</a></span>
+        <!-- Delete button to remove game and associated tracks/times from db -->
+        <!-- <span class='del'> Delete </span> -->
+      </li>
+      <% }) %>
+  </ul>
+
+  <!-- Form to create/submit a new Game -->
+  <form action="/game/createGame" method='POST'>
+    <!-- text input area for game name -->
+    <label for="gameName">New Game:</label>
+    <input type="text" placeholder="Enter Game Name" name='gameName'> 
+    <!-- Submit new game -->
+    <input type="submit"> 
+  </form>
+</body>
+
+</html>
