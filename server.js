@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const Mongo = require('mongodb').MongoClient;
-require('dotenv').config();
+require('dotenv').config({path: './config/.env'});
 const PORT = process.env.PORT || 5000 // Get port from .env or set manually to 5000
 
 /**
