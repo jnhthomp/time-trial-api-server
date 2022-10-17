@@ -8,9 +8,10 @@ This application was created to act as a server/API to interact with a MongoDB d
 ## How It's Made:
 **Tech used:** <!--JavaSCript =>--><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <!-- Node.js =>--><a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a><!-- MongoDB =>--><a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="MongoDB" width="40" height="40"/> </a><!-- Postman =>--><a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="40" height="40"/> </a><!-- Express =>--><a href="http://expressjs.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="Express JS" width="40" height="40"/> </a> 
 
-This is an Express based application server with a React front-end that connects with a MongoDB instance serve up relevant data using ejs files to dynamically generate the displayed content. By utilizing a versatile database such as MongoDB I can more easily make quick changes as needed.
+This is an Express based application server with a React front-end that connects with a MongoDB instance serve up relevant data and dynamically generate the displayed content. By utilizing a versatile database such as MongoDB I can more easily make quick changes as needed especially during early development and planning. This application is currently in the process of having the server converted to an MVC model which will allow for much easier updates and changes to the application.
 
 ### Available Endpoints
+<!-- TODO: Update endpoints after MVC conversion is complete -->
 - `/api`
   - `GET`: Return a list of available games to choose from. Each game is a database and will contain tracks as collections within
 - `/api/:gameName`
@@ -38,6 +39,7 @@ This is an Express based application server with a React front-end that connects
     ```
 
 ### How to install/use
+<!-- TODO: Update install/use instructions after MVC update -->
 1. Create MongoDB account/database
     - Use connect button to get connection string and make note
 2. Create .env file to store connection string and port to use on dev environment
@@ -79,6 +81,8 @@ To make changes to react project
       ```
 
 ## Optimizations
+<!-- TODO: Complete some of these optimizations for MVC version -->
+<!-- TODO: Update optimizations when MVC version is complete -->
 - Extract submit data to a reusable method
 
 - Add Username/password validation
@@ -111,7 +115,7 @@ To make changes to react project
   - If it exists is a string and must be converted before being submitted to database
   - If it does not exist then does not need converted before submission
 
-- Create seperate routes for API (data only) and ejs routes
+- Create separate routes for API (data only) and ejs routes
   - Update links in discord bot to match these non routes (embed object should link to ejs route but data should come from api route)
   - Make sure links in ejs file link to ejs route and not api route
 
@@ -131,10 +135,10 @@ To make changes to react project
 - Adding React To Express and Deploying to Heroku: https://www.youtube.com/watch?v=xwovj4-eM3Y&list=LL&index=1&t=831s
 
 ## Other Examples:
-Take a look at other examples from my <a href="https://jtdev.netlify.app/">portfolio</a> using the lessons learned from these classes:
+Take a look at other examples from my <a href="https://jtdev.netlify.app/">portfolio</a>:
 
 
-**Blog Site W/ Categories and Authentification:** https://github.com/jnhthomp/alpha-blog2
+**Blog Site W/ Categories and Authentication:** https://github.com/jnhthomp/alpha-blog2
 
 **Stock Based Social Network:** https://github.com/jnhthomp/finance-tracker
 
