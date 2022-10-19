@@ -4,7 +4,7 @@
   "description": "Server to handle api requests to a MonogDB to track time-trial data for different racing games",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "cd client && npm install && npm run build && cd .. && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1 ",
     "dev": "nodemon server.js",
     "build": "cd client && npm install && npm run build"
